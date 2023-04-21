@@ -1,24 +1,48 @@
-import logo from './logo.svg';
 import './App.css';
+import {BrowserRouter, Routes, Route} from "react-router-dom";
+import Home from "./home";
+import SignUp from "./signup";
+import LogIn from "./login";
+import {Provider} from "react-redux";
+import {configureStore} from "@reduxjs/toolkit";
+import userReducer from "./home/reducer"
+import bankReducer from "./bank/reducer"
+import authReducer from "./reducer/auth"
+import NavigationSidebar from "./navigation-sidebar";
+import MyProfile from "./profile";
+import EditProfile from "./edit-profile";
+import QuizBank from "./quiz";
+import NavBar from "./navBar";
+const store = configureStore(
+    {reducer: {users: userReducer, bank: bankReducer, auth:authReducer}});
 
 function App() {
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+
+      <BrowserRouter>
+
+          <Provider store={store}>
+              <NavBar/>
+
+                  <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/signup" element={<SignUp/>}/>
+                    <Route path="/login" element={<LogIn/>}/>
+                    <Route path="/profile" element={<MyProfile/>}/>
+                    <Route path="/editProfile" element={<EditProfile/>}/>
+                    <Route path="/startQuiz" element={<QuizBank/>}/>
+
+                  </Routes>
+
+
+          </Provider>
+
+      </BrowserRouter>
+      </>
+
   );
 }
 
