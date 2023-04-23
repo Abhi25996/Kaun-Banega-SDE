@@ -1,5 +1,4 @@
 const UserStats = ({user}) =>{
-    console.log(user)
     let topic = "Not Started";
     let maxKey, maxValue = 0;
 

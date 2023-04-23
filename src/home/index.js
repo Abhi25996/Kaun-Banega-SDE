@@ -7,7 +7,7 @@ import Footer from "../footer";
 import Stats from "./stats";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import {findAllUsersThunk} from "../services/user-thunks";
+import {aboutMeThunk, findAllUsersThunk} from "../services/user-thunks";
 import {findAllQuestionsThunk} from "../services/bank-thunks";
 import {useNavigate} from "react-router-dom";
 import UserStats from "./user-stats";
@@ -22,7 +22,7 @@ const Home = ()=>{
         state => state.bank)
     const {currentUser} = useSelector(
         state => state.auth)
-    console.log("CURRENT USER: ", currentUser)
+    // console.log("CURRENT USER: ", currentUser)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     useEffect(() => {
@@ -58,7 +58,7 @@ const Home = ()=>{
                 </div>
             </div>
             {/*User Stats*/}
-            {currentUser? <UserStats user={{answered: currentUser.correctQuestionList.length+ currentUser.inCorrectQuestionList.length, unanswered: (questions.length- currentUser.questionsAnswered), score: currentUser.totalScore, segregation: currentUser.questionSegregation}}/>:null}
+            {currentUser? <UserStats user={{answered: currentUser.correctQuestionList.length+ currentUser.inCorrectQuestionList.length, unanswered: (questions.length- (currentUser.correctQuestionList.length+ currentUser.inCorrectQuestionList.length)), score: currentUser.totalScore, segregation: currentUser.questionSegregation}}/>:null}
             {/*Website Stats*/}
             {!loading && !loadingBank ?<Stats webStats = {{category: category.length,question: questions.length, users: orderUsers.length, article:20}}/>:<h2>Loading Stats......</h2>}
             {/*LeaderBoard Section*/}
@@ -69,8 +69,7 @@ const Home = ()=>{
             <FAQ/>
             {/*Signup Section*/}
             {!currentUser?<Signup/>:null}
-            {/*Footer Section*/}
-            <Footer/>
+
 
         </div>
 

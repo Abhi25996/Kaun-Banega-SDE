@@ -47,3 +47,10 @@ export const updateUser = async (userInfo) => {
         .put(`${USER_API}/${userInfo._id}`, userInfo);
     return userInfo;
 }
+
+export const logout = async () => {
+    const response = await API.post(`${USER_API}/logout`);
+    console.log("LOGGED OUT ", response)
+    return response.data;
+};
+

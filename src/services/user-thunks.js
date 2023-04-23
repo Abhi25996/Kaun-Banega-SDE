@@ -34,6 +34,11 @@ export const deleteUserThunk = createAsyncThunk(
         return userId
     })
 
+export const logoutThunk = createAsyncThunk(
+    "auth/logout", async () => {
+       console.log("REACHED HERE")
+        return await service.logout();
+    });
 
 
 export const updateUserThunk =

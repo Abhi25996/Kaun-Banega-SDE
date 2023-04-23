@@ -49,7 +49,6 @@ const usersSlice = createSlice({
                     ...state.users[userIndex],
                     ...payload
                 }
-                console.log(state.users[userIndex])
             }
     },
     reducers: { }

@@ -8,13 +8,19 @@ import {configureStore} from "@reduxjs/toolkit";
 import userReducer from "./home/reducer"
 import bankReducer from "./bank/reducer"
 import authReducer from "./reducer/auth"
-import NavigationSidebar from "./navigation-sidebar";
+import articleReducer from "./reducer/articles"
 import MyProfile from "./profile";
 import EditProfile from "./edit-profile";
-import QuizBank from "./quiz";
 import NavBar from "./navBar";
+import StartQuiz from "./quiz";
+import CreateQuestion from "./createQuestion";
+import Manage from "./manage";
+import UserGrid from "./users";
+import ShowUserProfile from "./profile/showOtherProfile";
+import Footer from "./footer";
+import Search from "./search";
 const store = configureStore(
-    {reducer: {users: userReducer, bank: bankReducer, auth:authReducer}});
+    {reducer: {users: userReducer, bank: bankReducer, auth:authReducer, articles:articleReducer}});
 
 function App() {
 
@@ -33,10 +39,16 @@ function App() {
                     <Route path="/login" element={<LogIn/>}/>
                     <Route path="/profile" element={<MyProfile/>}/>
                     <Route path="/editProfile" element={<EditProfile/>}/>
-                    <Route path="/startQuiz" element={<QuizBank/>}/>
+                    <Route path="/startQuiz" element={<StartQuiz/>}/>
+                    <Route path="/addQuestion" element={<CreateQuestion/>}/>
+                    <Route path="/allUsers" element={<UserGrid/>}/>
+                    <Route path="/manage" element={<Manage/>}/>
+                    <Route path="/profile/*" element={<ShowUserProfile/>}/>
+                    <Route path="/search" element={<Search/>}/>
 
                   </Routes>
 
+            <Footer/>
 
           </Provider>
 

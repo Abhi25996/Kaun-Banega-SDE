@@ -1,9 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {updateLoggedInUserThunk, updateUserThunk} from "../services/user-thunks";
+import {useEffect} from "react";
 
 const MyProfile = () => {
-
     const {currentUser} = useSelector(
         state => state.auth)
     const {users, loading} = useSelector(
@@ -11,7 +11,10 @@ const MyProfile = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     // eslint-disable-next-line no-restricted-globals
-    if(currentUser==null) location.href="/"
+    useEffect(()=>{
+        if(!currentUser) {
+            navigate("/")}
+    },[])
 
     const followMoreList = users.filter(user => (!currentUser?.following.includes(user?._id) && user?._id != currentUser?._id))
     const followingList = users.filter(user => (currentUser?.following.includes(user?._id)))
@@ -30,8 +33,7 @@ const MyProfile = () => {
 
     const updateFollowing = (id, followingRequested)=>{
         const u = users.filter(user => user._id == id);
-        console.log("USER", u)
-        console.log(u[0]._id)
+
         if(followingRequested) {
 
             dispatch(updateUserThunk({...u[0], followers: [].concat(...u[0].followers, currentUser?._id)}))
@@ -59,14 +61,14 @@ const MyProfile = () => {
                 <div className="card" >
                     {/*onClick={() => navigate('/profile/' + user.userName)}>*/}
                     <div className="d-flex flex-column align-items-center text-center mt-2">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                        <img src={`./assets/img/icons/${user?.iconPath}`}
                              className="rounded-circle" width="50"/>
                         <div className="mt-3">
                             <h6>{user?.firstName} {user.lastName}</h6>
-                            <p className="text-secondary mb-1" onClick={showFollow? null: () => navigate('/profile/' + user.userName)}>@{user.userName} </p>
-                            {showFollow?
-                            <button className="m-2 btn btn-primary" onClick={() => updateFollowing(user._id, true)}>Follow</button>:
-                                <button className="m-2 btn btn-primary" onClick={() => updateFollowing(user._id, false)}>UnFollow</button>
+                            <p className="text-secondary mb-1" onClick={() => navigate('/profile/' + user.userName)}>@{user.userName} </p>
+                            {showFollow ==true?
+                            <button className="m-2 btn btn-primary" onClick={() => updateFollowing(user._id, true)}>Follow</button>: showFollow==false?
+                                <button className="m-2 btn btn-primary" onClick={() => updateFollowing(user._id, false)}>UnFollow</button>:<></>
                             }
                         </div>
                     </div>
@@ -91,16 +93,22 @@ const MyProfile = () => {
                                     <div className="card">
                                         <div className="card-body">
                                             <div className="d-flex flex-column align-items-center text-center">
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                                                <img src={`./assets/img/icons/${currentUser?.iconPath}`}
                                                      alt="Admin"
                                                      className="rounded-circle" width="150"/>
                                                 <div className="mt-3">
                                                     <h4>{currentUser?.firstName} {currentUser?.lastName}</h4>
                                                     <p className="text-info fw-bolder mb-1">@{currentUser?.userName}</p>
                                                     {/*<button className="m-2 btn btn-primary">Follow</button>*/}
-                                                    <button className="btn btn-primary">
-                                                        {currentUser?.qaApproved ? "Question Admin" : currentUser?.qaRequested ? "Already Requested Question Admin" :
+                                                    <button className="btn btn-primary"
+                                                            onClick= {currentUser?.qaApproved ? null : currentUser?.qaRequested ? null :
+                                                                ()=>{dispatch(updateUserThunk({...currentUser, qaRequested: true}))
+                                                                    dispatch(updateLoggedInUserThunk({...currentUser, qaRequested: true}))}
+                                                    }
+                                                    >
+                                                        {currentUser?.role=="Admin"? "Admin": currentUser?.qaApproved ? "Question Admin" : currentUser?.qaRequested ? "Already Requested Question Admin" :
                                                             "Request Question Admin"}
+
                                                     </button>
                                                 </div>
                                             </div>
@@ -240,7 +248,7 @@ const MyProfile = () => {
                                                 Followers</h4>
                                             <div className="row">
                                                 {followersList.map((account, index)=>
-                                                    <ShowProfile user={account} showFollow={false}/>
+                                                    <ShowProfile user={account} showFollow={null}/>
                                                 )}
                                                 <span className="text-center">{followersList.length == 0 ?
                                                     <h5> No one is following you!</h5> : <></>}</span>
